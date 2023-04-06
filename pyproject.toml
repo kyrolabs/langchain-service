@@ -14,7 +14,8 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-langchain-service = "langchain.service:main"
+# langchain-service = "app.main:app"
+ingest = "app.ingest:main"
 
 
 [tool.poetry.dependencies]

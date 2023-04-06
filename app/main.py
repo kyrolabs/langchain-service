@@ -7,15 +7,25 @@ Attributes:
     app (FastAPI): The instance of the FastAPI framework.
 """
 
-from typing import Any, Optional
+from typing import Any
 
-from agent import Agent
 from dotenv import load_dotenv
 from fastapi import FastAPI
+from pydantic import BaseModel
+
+from app.agent import Agent
 
 load_dotenv()
 
 app = FastAPI()
+
+agent = Agent()
+
+
+class Query(BaseModel):
+    """Query model."""
+
+    query: str
 
 
 @app.get("/")
@@ -24,19 +34,9 @@ def read_root() -> Any:
     return {"message": "Welcome to langchain service!"}
 
 
-@app.get("/agents/{agent_id}")
-def read_agent(agent_id: int, query: Optional[str]):
-    """Retrieve information for specific agent by their ID."""
-    return {"agent_id": agent_id, "query": query}
-
-
-@app.put("/agents/{agent_id}")
-def update_agent(agent_id: int, agent: Agent):
-    """Update an existing agent with a new name."""
-    return {"agent_name": agent.name, "agent_id": agent_id}
-
-
-@app.post("/data")
-def ingest_data(data: str):
-    """Ingest data to the database and process its embeddings."""
-    return {"data": data}
+@app.post("/qa")
+def qa(query: Query):
+    """Run the agent on a query"""
+    response = agent.run(query.query)
+    return {"response": response}
+    return {"response": response}
