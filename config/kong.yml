@@ -1,0 +1,37 @@
+_format_version: "3.0"
+_transform: true
+
+services:
+  - host: langchain-service
+    name: langchain-service
+    port: 8000
+    protocol: http
+    routes:
+      - name: langchain-service_route
+        paths:
+          - /api
+        strip_path: true
+
+  - host: qdrant
+    name: qdrant
+    port: 6333
+    protocol: http
+    routes:
+      - name: qdrant_route
+        paths:
+          - /qdrant
+        strip_path: true
+
+consumers:
+  - username: qdrant
+
+keyauth_credentials:
+  - consumer: qdrant
+    key: <api-key>
+
+plugins:
+  - name: key-auth
+    config:
+      key_in_header: true
+      key_names:
+        - api-key

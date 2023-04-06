@@ -1,0 +1,54 @@
+# fastapi, kong, qdrant
+services:
+  kong:
+    image: kong:3.2.2
+    container_name: kong
+    networks:
+      - kong-net
+    volumes:
+      - ./config:/kong/declarative
+    environment:
+      - KONG_DATABASE=off
+      - KONG_DECLARATIVE_CONFIG=/kong/declarative/kong.yml
+      - KONG_ADMIN_LISTEN=0.0.0.0:8001, 0.0.0.0:8444 ssl
+    ports:
+      - "80:8000"
+      - "443:8443"
+      - "127.0.0.1:8001:8001"
+      - "127.0.0.1:8444:8444"
+
+  langchain-service:
+    container_name: langchain-service
+    build:
+      context: .
+      target: production
+    networks:
+      - kong-net
+      - postgres-net
+    ports:
+      - "127.0.0.1:8000:8000"
+
+  qdrant:
+    image: qdrant/qdrant
+    container_name: qdrant
+    networks:
+      - kong-net
+    volumes:
+      - ./data:/qdrant/storage
+    ports:
+      - "127.0.0.1:6333:6333"
+
+  postgres:
+    container_name: postgres
+    image: postgres:15.2-alpine
+    ports:
+      - "127.0.0.1:5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+
+
+networks:
+  kong-net:
+  postgres-net:

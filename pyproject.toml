@@ -1,0 +1,116 @@
+[tool.poetry]
+name = "langchain-service"
+version = "0.1.0"
+description = "Opiniated Langchain application using FasdtAPI"
+authors = ["Stephane Busso <stephane@kyrolabs.com>"]
+maintainers = ["Stephane Busso <stephane@kyrolabs.com>"]
+license = "MIT"
+readme = "README.md"
+repository = "https://www.github.com/kyrolabs/langchain-service"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+langchain-service = "langchain.service:main"
+
+
+[tool.poetry.dependencies]
+python = ">=3.8.1,<3.12"
+
+langchain = "0.0.131"
+
+fastapi = "0.95.0"
+gunicorn = "^20.1.0"
+uvicorn = "^0.21.1"
+python-dotenv = "^1.0.0"
+qdrant-client = "^1.1.1"
+openai = "^0.27.4"
+
+
+[tool.poetry.dev-dependencies]
+coverage = { version = "5.0.3", extras = ["toml"] }
+black = "^23.3.0"
+isort = { version = "^5.12.0", extras = ["pyproject"] }
+requests = "^2.28.2"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.1.3"
+flake8 = "^6.0.0"
+mypy = "^1.1.1"
+black = { version = "^23.3.0", allow-prereleases = true }
+
+[tool.poetry.group.typing.dependencies]
+mypy = "^1.1.1"
+types-pyyaml = "^6.0.12.9"
+types-requests = "^2.28.11.17"
+
+[tool.poetry.group.lint.dependencies]
+ruff = "^0.0.261"
+types-toml = "^0.10.8.6"
+types-redis = "^4.5.4.1"
+black = "^23.3.0"
+
+[tool.black]
+# https://github.com/psf/black
+line-length = 88
+target_version = ['py311']
+exclude = '''
+(
+  /(
+    \.git
+    | \.mypy_cache
+    | \.pytest_cache
+    | htmlcov
+    | venv
+    | .venv
+  )/
+)
+'''
+
+[tool.poetry.extras]
+dev = [
+  "pytest",
+  "mypy",
+  "types-pyyaml",
+  "types-requests",
+  "ruff",
+  "types-toml",
+  "types-redis",
+  "black",
+]
+lint = ["ruff", "types-toml", "types-redis", "black"]
+typing = ["mypy", "types-pyyaml", "types-requests"]
+all = ["langchain", "fastapi", "gunicorn", "uvicorn", "pydantic", "dotenv"]
+
+[tool.ruff]
+select = [
+  "E", # pycodestyle
+  "F", # pyflakes
+  "I", # isort
+]
+
+[tool.isort]
+# https://github.com/timothycrosley/isort
+# https://github.com/timothycrosley/isort/wiki/isort-Settings
+line_length = 88
+indent = '    '
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+
+
+[tool.coverage]
+# https://github.com/nedbat/coveragepy
+omit = ["tests/*"]
+[tool.coverage.run]
+
+source = ["app"]
+branch = true
+omit = ['']
+
+[tool.coverage.report]
+exclude_lines = ["# noqa", "raise NotImplementedError"]

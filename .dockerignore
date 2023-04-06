@@ -1,0 +1,14 @@
+README.md
+CHANGELOG.md
+docker-compose.yml
+LICENSE
+.git
+.gitignore
+.github
+
+.venv
+.github
+.git
+.mypy_cache
+.pytest_cache
+Dockerfile
