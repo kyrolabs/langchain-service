@@ -39,4 +39,3 @@ def qa(query: Query):
     """Run the agent on a query"""
     response = agent.run(query.query)
     return {"response": response}
-    return {"response": response}
